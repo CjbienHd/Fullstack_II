@@ -1,0 +1,14 @@
+.navbar {
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #FFC0CB;
+
+
+    .nav_links {
+        display: flex;
+        gap: 5px;
+        list-style-type: none;
+    }
+}
