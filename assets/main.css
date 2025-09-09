@@ -29,7 +29,18 @@
     background-color: #FFF5E1;
     font-family: 'Lato';
 
+
+
     h1 {
+        font-family: 'Pacifico';
+        color: #5D4037;
+        display: flex;
+        justify-content: center;
+        margin: 0px;
+        padding: 15px;
+    }
+
+    h2 {
         font-family: 'Pacifico';
         color: #5D4037;
         display: flex;
@@ -139,11 +150,16 @@ footer {
         color: #B0BEC5;
     }
 
-    .side_name {
+    .footer_links {
         display: flex;
         align-items: center;
+
+        li {
+            margin: 20px;
+            list-style-type: none};
+        }
     }
-}
+
 
 .rojo {
     color: red;
