@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro - Pastelería 1000 Sabores</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../login/css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+        <img src="../assets/img/icono_PMS-removebg-preview.png" width="80px" alt="Logo"/>
+        <h1 class ="Pasteleria">Pastelería Mil Sabores</h1>
+        <ul class="nav_links">
+          <li><a class="nav_link" href="../Index.html">Home</a> |</li>
+        </ul>
+    </nav>
+  <div class="contenedor-login">
+    <div class="logo">
+      <img src="../assets/img/icono_PMS-removebg-preview.png" alt="Logo Pastelería Mil Sabores">
+    </div>
+
+    
+
+    <div class="caja">
+      <h1 class="subtitulo">Crear cuenta</h1>
+      <form id="form-register" novalidate>
+ 
+        <label for="r_nombre">Nombre</label>
+        <input type="text" id="r_nombre" name="nombre" placeholder="Ingrese su nombre" required>
+        <small class="msg" id="msg-nombre"></small>
+
+ 
+        <label for="r_email">Correo electrónico</label>
+        <input type="email" id="r_email" name="email" placeholder="Ingrese su correo electrónico" required>
+        <small class="msg" id="msg-email"></small>
+
+        <label for="r_edad">Edad</label>
+        <input type="number" id="r_edad" name="edad" min="0" max="120" placeholder="Ingrese su edad">
+        <small class="msg" id="msg-edad"></small>
+
+        <label for="r_codigo">Código promocional</label>
+        <input type="text" id="r_codigo" name="codigo" placeholder="Ingrese el código promocional(opcional)">
+        <small class="msg" id="msg-codigo"></small>
+
+
+        <label for="r_pass">Contraseña</label>
+        <input type="password" id="r_pass" name="password" placeholder="Ingrese su contraseña entre 8 a 20 caracteres" minlength="8" maxlength="20" required>
+        <small class="msg" id="msg-pass"></small>
+
+        <label for="r_confirm">Confirmar contraseña</label>
+        <input type="password" id="r_confirm" name="confirm" placeholder="Repita su contraseña entre 8 a 20 caracteres" minlength="8" maxlength="20" required>
+        <small class="msg" id="msg-confirm"></small>
+
+        <button type="submit" class="btn">Regístrate</button>
+      </form>
+
+      <p class="ayuda">¿Ya tienes cuenta? <a href="../login/index.html">Inicia sesión</a></p>
+      <div id="beneficios" style="margin-top:12px; font-size:14px; color:var(--texto);"></div>
+    </div>
+  </div>
+
+  <script>
+(function(){
+  const LS_KEY = 'pms_users';
+
+  function getUsers(){
+    try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveUsers(arr){
+    localStorage.setItem(LS_KEY, JSON.stringify(arr));
+  }
+
+  const form    = document.getElementById('form-register');
+  const nombre  = document.getElementById('r_nombre');
+  const email   = document.getElementById('r_email');
+  const edad    = document.getElementById('r_edad');
+  const codigo  = document.getElementById('r_codigo');
+  const pass    = document.getElementById('r_pass');
+  const confirm = document.getElementById('r_confirm');
+  const beneficios = document.getElementById('beneficios');
+
+  const msgNombre  = document.getElementById('msg-nombre');
+  const msgEmail   = document.getElementById('msg-email');
+  const msgEdad    = document.getElementById('msg-edad');
+  const msgCodigo  = document.getElementById('msg-codigo');
+  const msgPass    = document.getElementById('msg-pass');
+  const msgConfirm = document.getElementById('msg-confirm');
+
+  const allowDomains = ['duocuc.cl','profesor.duocuc.cl','gmail.com'];
+
+  function setError(msgEl, text){ msgEl.textContent = text; msgEl.style.color='red'; }
+  function setOK(msgEl, text=''){ msgEl.textContent = text; msgEl.style.color='green'; }
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    let ok = true;
+    beneficios.textContent = '';
+
+    if(!nombre.value.trim()){ setError(msgNombre,'El nombre es obligatorio'); ok=false; } else { setOK(msgNombre); }
+
+    const mail = (email.value || '').trim().toLowerCase();
+    if(!mail){ setError(msgEmail,'El correo es obligatorio'); ok=false; }
+    else {
+      const domain = (mail.split('@')[1] || '');
+      if(!allowDomains.includes(domain)){ setError(msgEmail,'Dominio no permitido'); ok=false; }
+      else setOK(msgEmail);
+    }
+
+    if(edad.value){
+      if(parseInt(edad.value)>=50){ setOK(msgEdad,'Beneficio: 50% de descuento por ser mayor de 50 🎉'); }
+      else { setOK(msgEdad); }
+    }
+
+    if((codigo.value || '').trim().toUpperCase()==='FELICES50'){ setOK(msgCodigo,'Beneficio: 10% descuento de por vida 🎉'); }
+
+    if(pass.value.length<8 || pass.value.length>20){ setError(msgPass,'Contraseña 8 a 20 caracteres'); ok=false; }
+    else { setOK(msgPass); }
+
+    if(confirm.value !== pass.value){ setError(msgConfirm,'Las contraseñas no coinciden'); ok=false; }
+    else { setOK(msgConfirm); }
+
+    if(!ok) return;
+
+    const users = getUsers();
+    if(users.some(u => u.email === mail)){
+      setError(msgEmail, 'Ese correo ya está registrado');
+      return;
+    }
+
+    users.push({
+      nombre: nombre.value.trim(),
+      email: mail,
+      pass: pass.value
+    });
+    saveUsers(users);
+
+    alert('Cuenta creada correctamente.');
+    form.reset();
+    window.location.href = '../login/index.html';
+  });
+})();
+</script>
+
+</body>
+</html>
